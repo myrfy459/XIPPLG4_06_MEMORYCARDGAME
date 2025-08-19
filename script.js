@@ -1,5 +1,10 @@
-const emojisBase = ['🍎', '🍋', '🍇', '🍉', '🍒', '🍍', '🥝', '🍌', '🍑', '🥭'];
-let emojis = [];
+const themes = {
+  buah: ['🍎','🍋','🍇','🍉','🍒','🍍','🥝','🍌','🍑','🥭'],
+  hewan: ['🐶','🐱','🦁','🐯','🐸','🐼','🐧','🐢','🐰','🐻'],
+  sayur: ['🥦','🥕','🌽','🍆','🥒','🥬','🧄','🧅','🍠','🥔']
+};
+let currentTheme = 'buah';
+let emojisBase = themes[currentTheme];
 let cards = [];
 let firstCard = null;
 let secondCard = null;
@@ -130,3 +135,13 @@ function nextLevel() {
   level++;
   setupGame();
 }
+//untuk memilih tema
+const themeSelect = document.getElementById("themeSelect");
+document.getElementById("playBtn").addEventListener("click", () => {
+  currentTheme = themeSelect.value;
+  emojisBase = themes[currentTheme];
+  document.getElementById("menu").classList.add("hidden");
+  board.classList.remove("hidden");
+  setupGame();
+});
+

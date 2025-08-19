@@ -13,12 +13,22 @@
   <div class="info" id="timer">Waktu: 0 detik</div>
   <div class="info" id="steps">Langkah: 0</div>
 
+  <!-- MENU (pilih tema + tombol main) -->
   <div id="menu">
+    <label for="themeSelect">Pilih Tema:</label>
+    <select id="themeSelect">
+      <option value="buah">🍎 Buah</option>
+      <option value="hewan">🐶 Hewan</option>
+      <option value="sayur">🥦 Sayur</option>
+    </select>
+    
     <button id="playBtn">▶️ Main</button>
   </div>
 
+  <!-- BOARD GAME -->
   <div class="game-board hidden" id="board"></div>
 
+  <!-- POPUP MENANG -->
   <div class="win-popup" id="popup">
     <div class="popup-content">
       <h2>🎉 Level Selesai!</h2>
@@ -28,7 +38,7 @@
     </div>
   </div>
 
-  <!-- Sound files -->
+  <!-- SOUND -->
   <audio id="clickSound" src="click.mp3"></audio>
   <audio id="matchSound" src="match.mp3"></audio>
   <audio id="winSound" src="win.mp3"></audio>

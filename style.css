@@ -150,4 +150,38 @@ body {
     background-color: #059669;
     transform: scale(1.1);
   }
+  /* ====== THEME SELECT ====== */
+#menu label {
+  font-size: 18px;
+  font-weight: bold;
+  color: #92400e;
+  margin-right: 10px;
+}
+
+#themeSelect {
+  padding: 10px 15px;
+  font-size: 16px;
+  border-radius: 10px;
+  border: 2px solid #fbbf24;
+  background: #fff8e1;
+  color: #92400e;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+#themeSelect:hover {
+  border-color: #f59e0b;
+  background: #fff3cd;
+  transform: scale(1.05);
+}
+
+/* rapikan agar dropdown + tombol ada jarak */
+#menu {
+  margin-top: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 15px;
+}
+
   
