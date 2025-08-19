@@ -6,12 +6,13 @@
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-
   <h1>🧠 Memory Game</h1>
   
-  <div class="info" id="level">Level: 1</div>
-  <div class="info" id="timer">Waktu: 0 detik</div>
-  <div class="info" id="steps">Langkah: 0</div>
+  <div class="hud">
+    <div class="info" id="level">Level: 1</div>
+    <div class="info" id="timer">Waktu: 0 detik</div>
+    <div class="info" id="steps">Langkah: 0</div>
+  </div>
 
   <!-- MENU (pilih tema + tombol main) -->
   <div id="menu">
@@ -44,13 +45,10 @@
   </div>
 
   <!-- SOUND -->
-  <audio id="clickSound" src="click.mp3" preload="none"></audio>
-  <audio id="matchSound" src="match.mp3" preload="none"></audio>
-  <audio id="winSound" src="win.mp3" preload="none"></audio>
+  <audio id="bgMusic" loop></audio>
 
-  <!-- BACKGROUND MUSIC -->
-  <audio id="bgMusic" src="game-music-loop-6-144641.mp3" loop></audio>
-
+  <!-- Confetti -->
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
   <script src="script.js"></script>
 </body>
 </html>

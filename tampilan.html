@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tampilan Background Memory Game</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      background-size: cover;
+      background-position: center;
+      transition: background 1s ease-in-out;
+      font-family: Arial, sans-serif;
+      color: white;
+    }
+
+    h1 {
+      font-size: 2.5rem;
+      text-shadow: 2px 2px 5px rgba(0,0,0,0.7);
+    }
+
+    select {
+      padding: 10px 15px;
+      font-size: 1rem;
+      border-radius: 8px;
+      border: none;
+      outline: none;
+      cursor: pointer;
+      margin-top: 15px;
+    }
+
+    /* Animasi background bergerak */
+    @keyframes moveBg {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    .animated-bg {
+      animation: moveBg 15s infinite linear;
+      background-size: 200% 200%;
+    }
+  </style>
+</head>
+<body>
+  <h1>Pilih Tema Background</h1>
+  <select id="temaSelect">
+    <option value="">-- Pilih Tema --</option>
+    <option value="buah">🍎 Buah</option>
+    <option value="sayur">🥦 Sayur</option>
+    <option value="hewan">🐶 Hewan</option>
+  </select>
+
+  <script>
+    const body = document.body;
+    const temaSelect = document.getElementById("temaSelect");
+
+    // Daftar background Unsplash (realistis + HD)
+    const temaBackground = {
+      buah: "url('https://images.unsplash.com/photo-1601004890684-d8cbf643f5f2?auto=format&fit=crop&w=1600&q=80')",
+      sayur: "url('https://images.unsplash.com/photo-1518976024611-4881e0bf9b1e?auto=format&fit=crop&w=1600&q=80')",
+      hewan: "url('https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=1600&q=80')"
+    };
+
+    temaSelect.addEventListener("change", () => {
+      const tema = temaSelect.value;
+      if (tema && temaBackground[tema]) {
+        body.style.backgroundImage = temaBackground[tema];
+        body.classList.add("animated-bg");
+      } else {
+        body.style.backgroundImage = "";
+        body.classList.remove("animated-bg");
+      }
+    });
+  </script>
+</body>
+</html>
