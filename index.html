@@ -22,6 +22,11 @@
       <option value="sayur">🥦 Sayur</option>
     </select>
     
+    <div id="audioControls">
+      <button id="musicToggle">🔊 Musik: ON</button>
+      <button id="sfxToggle">🔈 SFX: ON</button>
+    </div>
+    
     <button id="playBtn">▶️ Main</button>
   </div>
 
@@ -39,9 +44,12 @@
   </div>
 
   <!-- SOUND -->
-  <audio id="clickSound" src="click.mp3"></audio>
-  <audio id="matchSound" src="match.mp3"></audio>
-  <audio id="winSound" src="win.mp3"></audio>
+  <audio id="clickSound" src="click.mp3" preload="none"></audio>
+  <audio id="matchSound" src="match.mp3" preload="none"></audio>
+  <audio id="winSound" src="win.mp3" preload="none"></audio>
+
+  <!-- BACKGROUND MUSIC -->
+  <audio id="bgMusic" src="game-music-loop-6-144641.mp3" loop></audio>
 
   <script src="script.js"></script>
 </body>
