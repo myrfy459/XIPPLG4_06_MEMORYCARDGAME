@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <title>Memory Game Upgrade</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <h1>🧠 Memory Game</h1>
+  
+  <div class="info" id="level">Level: 1</div>
+  <div class="info" id="timer">Waktu: 0 detik</div>
+  <div class="info" id="steps">Langkah: 0</div>
+
+  <div id="menu">
+    <button id="playBtn">▶️ Main</button>
+  </div>
+
+  <div class="game-board hidden" id="board"></div>
+
+  <div class="win-popup" id="popup">
+    <div class="popup-content">
+      <h2>🎉 Level Selesai!</h2>
+      <p id="final-info"></p>
+      <button onclick="nextLevel()">➡️ Lanjut Level</button>
+      <button onclick="restartGame()">🔄 Ulang dari Awal</button>
+    </div>
+  </div>
+
+  <!-- Sound files -->
+  <audio id="clickSound" src="click.mp3"></audio>
+  <audio id="matchSound" src="match.mp3"></audio>
+  <audio id="winSound" src="win.mp3"></audio>
+
+  <script src="script.js"></script>
+</body>
+</html>
