@@ -21,13 +21,58 @@ let matchedPairs = 0;
 let timer = 0;
 let timerInterval;
 let level = 1;
+let score = 0;
 
 const board = document.getElementById("board");
 const stepsDisplay = document.getElementById("steps");
 const timerDisplay = document.getElementById("timer");
 const levelDisplay = document.getElementById("level");
+const scoreDisplay = document.getElementById("score");
 const popup = document.getElementById("popup");
 const finalInfo = document.getElementById("final-info");
+const showLeaderboardBtn = document.getElementById("showLeaderboardBtn");
+const leaderboardEl = document.getElementById("leaderboard");
+const leaderboardListEl = document.getElementById("leaderboardList");
+
+const LEADERBOARD_KEY = 'memory_leaderboard_v1';
+
+function updateScoreDisplay() {
+  if (scoreDisplay) scoreDisplay.textContent = `Skor: ${score}`;
+}
+function getLeaderboard() {
+  try {
+    const raw = localStorage.getItem(LEADERBOARD_KEY);
+    return raw ? JSON.parse(raw) : [];
+  } catch (_) {
+    return [];
+  }
+}
+function saveLeaderboard(list) {
+  localStorage.setItem(LEADERBOARD_KEY, JSON.stringify(list));
+}
+function addToLeaderboard(name, value) {
+  const list = getLeaderboard();
+  list.push({ name, score: value });
+  list.sort((a,b)=>b.score - a.score);
+  const top5 = list.slice(0,5);
+  saveLeaderboard(top5);
+}
+function renderLeaderboard() {
+  if (!leaderboardListEl) return;
+  const list = getLeaderboard();
+  leaderboardListEl.innerHTML = '';
+  list.forEach(item => {
+    const li = document.createElement('li');
+    li.textContent = `${item.name} - ${item.score}`;
+    leaderboardListEl.appendChild(li);
+  });
+}
+if (showLeaderboardBtn) {
+  showLeaderboardBtn.addEventListener('click', () => {
+    renderLeaderboard();
+    if (leaderboardEl) leaderboardEl.classList.toggle('hidden');
+  });
+}
 
 // audio
 const bgMusic = document.getElementById("bgMusic");
@@ -120,6 +165,7 @@ function setupGame() {
   timerDisplay.textContent = "Waktu: 0 detik";
   stepsDisplay.textContent = "Langkah: 0";
   levelDisplay.textContent = `Level: ${level}`;
+  updateScoreDisplay();
   const pairs = 4 + (level - 1) * 2;
   emojis = emojisBase.slice(0,pairs);
   cards = [...emojis,...emojis];
@@ -158,11 +204,16 @@ function handleCardClick(card) {
       firstCard.classList.add("matched");
       secondCard.classList.add("matched");
       playSfx('match'); matchedPairs++;
+      score += 10; updateScoreDisplay();
       if (matchedPairs===emojis.length) {
         clearInterval(timerInterval); playSfx('win');
         setTimeout(()=>{
           finalInfo.textContent = `Level ${level} selesai! 🏆\nWaktu: ${timer} detik | Langkah: ${steps}`;
           popup.classList.add("show"); showConfetti();
+          const name = prompt('Masukkan nama Anda untuk leaderboard:', 'Player');
+          if (name && name.trim()) {
+            addToLeaderboard(name.trim(), score);
+          }
         },500);
       }
       resetTurn();
@@ -171,13 +222,14 @@ function handleCardClick(card) {
       setTimeout(()=>{
         firstCard.classList.remove("flipped");
         secondCard.classList.remove("flipped");
+        score -= 2; updateScoreDisplay();
         resetTurn();
       },800);
     }
   }
 }
 function resetTurn() { [firstCard,secondCard]=[null,null]; lock=false; }
-function restartGame() { popup.classList.remove("show"); level=1; setupGame(); }
+function restartGame() { popup.classList.remove("show"); level=1; score=0; updateScoreDisplay(); setupGame(); }
 function nextLevel() { popup.classList.remove("show"); level++; setupGame(); }
 function showConfetti() {
   const end = Date.now() + 2*1000

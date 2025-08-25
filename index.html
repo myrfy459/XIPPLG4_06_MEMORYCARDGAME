@@ -12,6 +12,7 @@
     <div class="info" id="level">Level: 1</div>
     <div class="info" id="timer">Waktu: 0 detik</div>
     <div class="info" id="steps">Langkah: 0</div>
+    <div class="info" id="score">Skor: 0</div>
   </div>
 
   <!-- MENU (pilih tema + tombol main) -->
@@ -33,6 +34,15 @@
 
   <!-- BOARD GAME -->
   <div class="game-board hidden" id="board"></div>
+
+  <!-- LEADERBOARD CONTROLS & LIST (simple, under game) -->
+  <div id="leaderboardControls" class="leaderboard-controls">
+    <button id="showLeaderboardBtn">🏆 Lihat Leaderboard</button>
+  </div>
+  <div id="leaderboard" class="leaderboard hidden">
+    <h3>🏆 Leaderboard (Top 5)</h3>
+    <ol id="leaderboardList"></ol>
+  </div>
 
   <!-- POPUP MENANG -->
   <div class="win-popup" id="popup">
