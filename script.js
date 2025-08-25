@@ -22,6 +22,8 @@ let timer = 0;
 let timerInterval;
 let level = 1;
 let score = 0;
+let playerName = "";
+const MAX_LEVEL = 4;   // total level berhenti di level 4
 
 const board = document.getElementById("board");
 const stepsDisplay = document.getElementById("steps");
@@ -124,6 +126,14 @@ document.getElementById("playBtn").addEventListener("click", () => {
   currentTheme = themeSelect ? themeSelect.value : currentTheme;
   emojisBase = themes[currentTheme];
 
+  // === Tanya nama sekali di awal ===
+  playerName = prompt("Masukkan nama Anda:", "Player");
+  if (!playerName || !playerName.trim()) {
+    alert("Nama harus diisi untuk mulai bermain!");
+    return; 
+  }
+  playerName = playerName.trim();
+
   document.body.classList.remove("tema-buah","tema-sayur","tema-hewan");
   document.body.classList.add(`tema-${currentTheme}`);
 
@@ -206,14 +216,41 @@ function handleCardClick(card) {
       playSfx('match'); matchedPairs++;
       score += 10; updateScoreDisplay();
       if (matchedPairs===emojis.length) {
-        clearInterval(timerInterval); playSfx('win');
+        clearInterval(timerInterval); 
+        playSfx('win');
         setTimeout(()=>{
           finalInfo.textContent = `Level ${level} selesai! 🏆\nWaktu: ${timer} detik | Langkah: ${steps}`;
-          popup.classList.add("show"); showConfetti();
-          const name = prompt('Masukkan nama Anda untuk leaderboard:', 'Player');
-          if (name && name.trim()) {
-            addToLeaderboard(name.trim(), score);
+          
+          const popupContent = popup.querySelector(".popup-content");
+          popupContent.querySelectorAll("button").forEach(btn => btn.remove());
+
+          if (level < MAX_LEVEL) {
+            // tombol lanjut level
+            const nextBtn = document.createElement("button");
+            nextBtn.textContent = "➡️ Lanjut Level";
+            nextBtn.onclick = nextLevel;
+            popupContent.appendChild(nextBtn);
+          } else {
+            // tombol selesai
+            const finishBtn = document.createElement("button");
+            finishBtn.textContent = "✅ Selesai";
+            finishBtn.onclick = () => {
+              popup.classList.remove("show");
+              document.getElementById("menu").classList.remove("hidden");
+              board.classList.add("hidden");
+              addToLeaderboard(playerName, score);
+            };
+            popupContent.appendChild(finishBtn);
           }
+
+          // tombol restart
+          const restartBtn = document.createElement("button");
+          restartBtn.textContent = "🔄 Ulang dari Awal";
+          restartBtn.onclick = restartGame;
+          popupContent.appendChild(restartBtn);
+
+          popup.classList.add("show"); 
+          showConfetti();
         },500);
       }
       resetTurn();
