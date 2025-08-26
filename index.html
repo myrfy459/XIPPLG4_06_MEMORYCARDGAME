@@ -29,28 +29,31 @@
       <button id="sfxToggle">🔈 SFX: ON</button>
     </div>
     
-    <button id="playBtn">▶️ Main</button>
+    <button id="playBtn">▶Main</button>
   </div>
 
   <!-- BOARD GAME -->
   <div class="game-board hidden" id="board"></div>
 
-  <!-- LEADERBOARD CONTROLS & LIST (simple, under game) -->
+  <!-- LEADERBOARD CONTROLS & LIST -->
   <div id="leaderboardControls" class="leaderboard-controls">
     <button id="showLeaderboardBtn">🏆 Lihat Leaderboard</button>
   </div>
+
   <div id="leaderboard" class="leaderboard hidden">
-    <h3>🏆 Leaderboard (Top 5)</h3>
+    <div class="leaderboard-header">
+      <h3>🏆 Leaderboard (Top 5)</h3>
+      <button id="closeLeaderboardBtn" class="close-btn">❌</button>
+    </div>
     <ol id="leaderboardList"></ol>
   </div>
 
   <!-- POPUP MENANG -->
   <div class="win-popup" id="popup">
     <div class="popup-content">
-      <h2>🎉 Level Selesai!</h2>
+      <h2>Level Selesai!</h2>
       <p id="final-info"></p>
-      <button onclick="nextLevel()">➡️ Lanjut Level</button>
-      <button onclick="restartGame()">🔄 Ulang dari Awal</button>
+      <!-- tombol di-generate lewat JS -->
     </div>
   </div>
 

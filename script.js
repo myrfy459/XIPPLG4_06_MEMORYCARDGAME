@@ -4,7 +4,7 @@ const themes = {
   sayur: ['🥦','🥕','🌽','🍆','🥒','🥬','🧄','🧅','🍠','🥔']
 };
 const themeMusic = {
-  buah: 'game-music-loop-6-144641.mp3',
+  buah: 'COBOY JUNIOR - Kamu (Official Music Video) - Coboy Junior Official.mp3',
   hewan: 'merx-market-song-33936.mp3',
   sayur: 'game-music-loop-6-144641.mp3'
 };
@@ -271,3 +271,11 @@ function nextLevel() { popup.classList.remove("show"); level++; setupGame(); }
 function showConfetti() {
   const end = Date.now() + 2*1000
 }
+
+const closeLeaderboardBtn = document.getElementById("closeLeaderboardBtn");
+if (closeLeaderboardBtn) {
+  closeLeaderboardBtn.addEventListener("click", () => {
+    leaderboardEl.classList.add("hidden");
+  });
+}
+
