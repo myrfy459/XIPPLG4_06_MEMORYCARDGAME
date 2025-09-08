@@ -24,6 +24,7 @@ let level = 1;
 let score = 0;
 let playerName = "";
 const MAX_LEVEL = 4;   // total level berhenti di level 4
+let firstFlipTimeoutId = null;
 
 const board = document.getElementById("board");
 const stepsDisplay = document.getElementById("steps");
@@ -145,6 +146,38 @@ document.getElementById("playBtn").addEventListener("click", () => {
   setupGame();
 });
 
+// Ganti tema saat sedang bermain: minta konfirmasi dulu
+if (themeSelect) {
+  themeSelect.addEventListener('change', (e) => {
+    const newTheme = themeSelect.value;
+    const menuEl = document.getElementById("menu");
+    const inGame = menuEl && menuEl.classList.contains('hidden');
+    if (inGame) {
+      const ok = confirm("Apa anda yakin ingin mengganti Tema? Ini akan mereset level permainan anda!");
+      if (!ok) {
+        // Batalkan perubahan select
+        themeSelect.value = currentTheme;
+        return;
+      }
+      // Konfirmasi: reset level dan setup ulang dengan tema baru
+      currentTheme = newTheme;
+      emojisBase = themes[currentTheme];
+      level = 1;
+
+      document.body.classList.remove("tema-buah","tema-sayur","tema-hewan");
+      document.body.classList.add(`tema-${currentTheme}`);
+
+      bgMusic.src = themeMusic[currentTheme];
+      playBgMusic();
+
+      // Reset skor atau pertahankan? Instruksi hanya menyebut level, skor tetap.
+      setupGame();
+    } else {
+      // Jika masih di menu, izinkan perubahan tanpa konfirmasi (akan dipakai saat tekan Main)
+    }
+  });
+}
+
 if (musicToggle) {
   musicToggle.addEventListener('click', () => {
     isMusicOn = !isMusicOn;
@@ -206,9 +239,19 @@ function handleCardClick(card) {
   playSfx('click');
   card.classList.add("flipped");
   if (!firstCard) {
+    // Jika kartu pertama dibalik, mulai timer 2 detik untuk otomatis balik lagi
     firstCard = card; if (timer===0) startTimer();
+    if (firstFlipTimeoutId) { clearTimeout(firstFlipTimeoutId); firstFlipTimeoutId = null; }
+    firstFlipTimeoutId = setTimeout(()=>{
+      // Hanya balik jika masih hanya 1 kartu yang terbuka dan kartu ini belum jadi pasangan
+      if (firstCard === card && !secondCard && !card.classList.contains('matched')) {
+        card.classList.remove('flipped');
+        resetTurn();
+      }
+    }, 2000);
   } else {
     secondCard = card; lock = true; steps++;
+    if (firstFlipTimeoutId) { clearTimeout(firstFlipTimeoutId); firstFlipTimeoutId = null; }
     stepsDisplay.textContent = `Langkah: ${steps}`;
     if (firstCard.dataset.emoji===secondCard.dataset.emoji) {
       firstCard.classList.add("matched");
@@ -265,7 +308,11 @@ function handleCardClick(card) {
     }
   }
 }
-function resetTurn() { [firstCard,secondCard]=[null,null]; lock=false; }
+function resetTurn() {
+  if (firstFlipTimeoutId) { clearTimeout(firstFlipTimeoutId); firstFlipTimeoutId = null; }
+  [firstCard,secondCard] = [null,null];
+  lock = false;
+}
 function restartGame() { popup.classList.remove("show"); level=1; score=0; updateScoreDisplay(); setupGame(); }
 function nextLevel() { popup.classList.remove("show"); level++; setupGame(); }
 function showConfetti() {
