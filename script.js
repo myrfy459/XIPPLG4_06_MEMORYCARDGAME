@@ -23,7 +23,7 @@ let timerInterval;
 let level = 1;
 let score = 0;
 let playerName = "";
-const MAX_LEVEL = 4;   // total level berhenti di level 4
+const MAX_LEVEL = 4;
 let firstFlipTimeoutId = null;
 
 const board = document.getElementById("board");
@@ -156,34 +156,26 @@ document.getElementById("startGameBtn").addEventListener("click", () => {
   setupGame();
 });
 
-// Ganti tema saat sedang bermain: minta konfirmasi dulu
+// Ganti tema saat sedang bermain
 if (themeSelect) {
-  themeSelect.addEventListener('change', (e) => {
+  themeSelect.addEventListener('change', () => {
     const newTheme = themeSelect.value;
     const menuEl = document.getElementById("menu");
     const inGame = menuEl && menuEl.classList.contains('hidden');
     if (inGame) {
       const ok = confirm("Apa anda yakin ingin mengganti Tema? Ini akan mereset level permainan anda!");
       if (!ok) {
-        // Batalkan perubahan select
         themeSelect.value = currentTheme;
         return;
       }
-      // Konfirmasi: reset level dan setup ulang dengan tema baru
       currentTheme = newTheme;
       emojisBase = themes[currentTheme];
       level = 1;
-
       document.body.classList.remove("tema-buah","tema-sayur","tema-hewan");
       document.body.classList.add(`tema-${currentTheme}`);
-
       bgMusic.src = themeMusic[currentTheme];
       playBgMusic();
-
-      // Reset skor atau pertahankan? Instruksi hanya menyebut level, skor tetap.
       setupGame();
-    } else {
-      // Jika masih di menu, izinkan perubahan tanpa konfirmasi (akan dipakai saat tekan Main)
     }
   });
 }
@@ -210,6 +202,7 @@ function startTimer() {
     timerDisplay.textContent = `Waktu: ${timer} detik`;
   }, 1000);
 }
+
 function setupGame() {
   board.innerHTML = '';
   steps = 0; matchedPairs = 0; timer = 0;
@@ -219,12 +212,14 @@ function setupGame() {
   stepsDisplay.textContent = "Langkah: 0";
   levelDisplay.textContent = `Level: ${level}`;
   updateScoreDisplay();
+
   const pairs = 4 + (level - 1) * 2;
   emojis = emojisBase.slice(0,pairs);
   cards = [...emojis,...emojis];
   const gridSize = Math.ceil(Math.sqrt(cards.length));
   board.style.gridTemplateColumns = `repeat(${gridSize},100px)`;
   cards.sort(()=>0.5-Math.random());
+
   cards.forEach((emoji,i)=>{
     const card = document.createElement("div");
     card.classList.add("card");
@@ -243,17 +238,23 @@ function setupGame() {
     card.addEventListener("click",()=>handleCardClick(card));
     board.appendChild(card);
   });
+
+  // 🔥 PREVIEW SEMUA KARTU DI DETIK AWAL 🔥
+  const allCards = document.querySelectorAll(".card");
+  allCards.forEach(c => c.classList.add("flipped")); // buka semua
+  setTimeout(() => {
+    allCards.forEach(c => c.classList.remove("flipped")); // tutup lagi
+  }, 1500); // lama preview (ms)
 }
+
 function handleCardClick(card) {
   if (lock || card.classList.contains("flipped") || card.classList.contains("matched")) return;
   playSfx('click');
   card.classList.add("flipped");
   if (!firstCard) {
-    // Jika kartu pertama dibalik, mulai timer 2 detik untuk otomatis balik lagi
     firstCard = card; if (timer===0) startTimer();
     if (firstFlipTimeoutId) { clearTimeout(firstFlipTimeoutId); firstFlipTimeoutId = null; }
     firstFlipTimeoutId = setTimeout(()=>{
-      // Hanya balik jika masih hanya 1 kartu yang terbuka dan kartu ini belum jadi pasangan
       if (firstCard === card && !secondCard && !card.classList.contains('matched')) {
         card.classList.remove('flipped');
         resetTurn();
@@ -272,21 +273,21 @@ function handleCardClick(card) {
         clearInterval(timerInterval); 
         playSfx('win');
         setTimeout(()=>{
-          finalInfo.textContent = `Level ${level} selesai! 🏆\nWaktu: ${timer} detik | Langkah: ${steps}`;
-          
           const popupContent = popup.querySelector(".popup-content");
           popupContent.querySelectorAll("button").forEach(btn => btn.remove());
 
           if (level < MAX_LEVEL) {
-            // tombol lanjut level
+            finalInfo.textContent = `Level ${level} selesai! 🏆\nWaktu: ${timer} detik | Langkah: ${steps}`;
             const nextBtn = document.createElement("button");
             nextBtn.textContent = "➡️ Lanjut Level";
             nextBtn.onclick = nextLevel;
             popupContent.appendChild(nextBtn);
           } else {
-            // tombol selesai
+            // 🎉 Level terakhir selesai → tampilkan skor akhir
+            finalInfo.textContent = `🎉 Selamat ${playerName}!\nKamu sudah menyelesaikan semua level.\nSkor Akhir: ${score}`;
+
             const finishBtn = document.createElement("button");
-            finishBtn.textContent = "✅ Selesai";
+            finishBtn.textContent = "🏠 Kembali ke Menu";
             finishBtn.onclick = () => {
               popup.classList.remove("show");
               document.getElementById("menu").classList.remove("hidden");
@@ -294,13 +295,12 @@ function handleCardClick(card) {
               addToLeaderboard(playerName, score);
             };
             popupContent.appendChild(finishBtn);
-          }
 
-          // tombol restart
-          const restartBtn = document.createElement("button");
-          restartBtn.textContent = "🔄 Ulang dari Awal";
-          restartBtn.onclick = restartGame;
-          popupContent.appendChild(restartBtn);
+            const restartBtn = document.createElement("button");
+            restartBtn.textContent = "🔄 Ulang dari Awal";
+            restartBtn.onclick = restartGame;
+            popupContent.appendChild(restartBtn);
+          }
 
           popup.classList.add("show"); 
           showConfetti();
@@ -318,6 +318,7 @@ function handleCardClick(card) {
     }
   }
 }
+
 function resetTurn() {
   if (firstFlipTimeoutId) { clearTimeout(firstFlipTimeoutId); firstFlipTimeoutId = null; }
   [firstCard,secondCard] = [null,null];
@@ -325,9 +326,7 @@ function resetTurn() {
 }
 function restartGame() { popup.classList.remove("show"); level=1; score=0; updateScoreDisplay(); setupGame(); }
 function nextLevel() { popup.classList.remove("show"); level++; setupGame(); }
-function showConfetti() {
-  const end = Date.now() + 2*1000
-}
+function showConfetti() { const end = Date.now() + 2*1000 }
 
 const closeLeaderboardBtn = document.getElementById("closeLeaderboardBtn");
 if (closeLeaderboardBtn) {
@@ -335,4 +334,3 @@ if (closeLeaderboardBtn) {
     leaderboardEl.classList.add("hidden");
   });
 }
-
