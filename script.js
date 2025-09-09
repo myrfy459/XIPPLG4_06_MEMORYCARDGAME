@@ -4,7 +4,7 @@ const themes = {
   sayur: ['🥦','🥕','🌽','🍆','🥒','🥬','🧄','🧅','🍠','🥔']
 };
 const themeMusic = {
-  buah: 'COBOY JUNIOR - Kamu (Official Music Video) - Coboy Junior Official.mp3',
+  buah: 'merx-market-song-33936.mp3',
   hewan: 'merx-market-song-33936.mp3',
   sayur: 'game-music-loop-6-144641.mp3'
 };
@@ -123,17 +123,27 @@ function playSfx(kind) {
 }
 
 const themeSelect = document.getElementById("themeSelect");
+// Tombol Play → tampilkan popup input nama
 document.getElementById("playBtn").addEventListener("click", () => {
+  document.getElementById("namePopup").classList.add("show");
+});
+
+// Tombol Mulai Game di popup
+document.getElementById("startGameBtn").addEventListener("click", () => {
+  const input = document.getElementById("playerNameInput");
+  const name = input.value.trim();
+  if (!name) {
+    alert("Nama harus diisi!");
+    return;
+  }
+  playerName = name;
+
+  // tutup popup
+  document.getElementById("namePopup").classList.remove("show");
+
+  // lanjut start game
   currentTheme = themeSelect ? themeSelect.value : currentTheme;
   emojisBase = themes[currentTheme];
-
-  // === Tanya nama sekali di awal ===
-  playerName = prompt("Masukkan nama Anda:", "Player");
-  if (!playerName || !playerName.trim()) {
-    alert("Nama harus diisi untuk mulai bermain!");
-    return; 
-  }
-  playerName = playerName.trim();
 
   document.body.classList.remove("tema-buah","tema-sayur","tema-hewan");
   document.body.classList.add(`tema-${currentTheme}`);
