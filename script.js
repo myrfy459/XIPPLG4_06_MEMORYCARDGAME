@@ -213,7 +213,7 @@ function setupGame() {
   levelDisplay.textContent = `Level: ${level}`;
   updateScoreDisplay();
 
-  const pairs = 4 + (level - 1) * 2;
+  const pairs = (level === 1) ? 3 : 4 + (level - 1) * 2; // level 1: 3 pasang (6 kartu)
   emojis = emojisBase.slice(0,pairs);
   cards = [...emojis,...emojis];
   const gridSize = Math.ceil(Math.sqrt(cards.length));
